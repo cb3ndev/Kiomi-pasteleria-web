@@ -1,0 +1,39 @@
+{% extends 'index.html' %}
+{% load static %}
+{% block title %} Store {% endblock title %}
+{% block body %}
+<div id="store">
+	<div class="block-heading">
+	</div>
+	<div class="container">
+		<template>
+			<div class="row d-flex">
+				<store-card-product v-for="product in dbProducts" :key="product.id" :product="product" />
+			</div>
+		</template>
+
+		<nav aria-label="Page navigation">
+			<ul class="pagination justify-content-center">
+				<li class="page-item" v-bind:class="[currentPage===1 ? 'disabled' :'']">
+					<a class="page-link" tabindex="-1" aria-disabled="true" @click="loadPrev()">Atras</a>
+				</li>
+				<li class="page-item" v-for="page in arrPages" v-bind:class="[currentPage===page ? 'active' :'']">
+					<a class="page-link btn-success" @click="loadCurrentPage(page)">[[page]]</a>
+				</li>
+				<li class="page-item" v-bind:class="[totalPages===currentPage ? 'disabled' :'']">
+					<a class="page-link" @click="loadNext()">Siguiente</a>
+				</li>
+			</ul>
+		</nav>
+
+	</div>
+</div>
+{% endblock body %}
+{% block js %}
+<!-- components -->
+<script src="{% static 'js/components/CardPagination.js' %}"></script>
+<script src="{% static 'js/components/StoreCardProduct.js' %}"></script>
+<!-- main vue -->
+<script type="module" src="{% static 'js/components/Store.js' %}"></script>
+<script type="module" src="{% static 'js/api.js' %}"></script>
+{% endblock js %}

@@ -1,0 +1,174 @@
+{% extends 'index.html' %}
+{% load static %}
+{% block title %} Store {% endblock title %}
+{% block body %}
+
+
+
+<main class="page" id="car">
+    <!-- <div v-for="orderItem in dbOrderItems" :key="orderItem.id">
+        
+                <h3> Producto Nombre: [[dbProducts.name]]</h3>
+                <p> Cantidad: [[orderItem.quantity]]</p>
+                <p> Sabor: [[orderItem.orderFlavor]]</p>
+                <p> Sabor-Cubierta: [[orderItem.orderFlavorCoverage]]</p>
+                <p> Sabor-Bizcocho: [[orderItem.orderFlavorBizcocho]]</p>
+    </div> -->
+
+    <section class="shopping-cart dark">
+        <div class="container">
+            <div class="block-heading">
+                <h2 class="font-georgia-bold">Carrito de Compras</h2>
+                <div class="font-georgia-bold">Máximo 6 productos por pedido</div>
+            </div>
+
+            <div class="content">
+                <div class="row ">
+                    <div class="col-md-12 col-lg-8">
+                        <div class="items">
+                            <div v-if="dbOrderItems.length===0" class="alert alert-warning" role="alert">
+                                El carrito se encuentra vacío actualmente.
+                            </div>
+                            <div v-for="(orderItem, indexArray) in dbOrderItems" :key="orderItem.id" class="product">
+                                <div class="horizontal-line"></div>
+
+                                <div class="row align-items-center">
+                                    <div class="col-md-3">
+                                        <img class="img-fluid mx-auto d-block image" :src="orderItem.product.image_1">
+                                    </div>
+                                    <div class="col-md-8">
+                                        <div class="info">
+                                            <div class="row align-items-center">
+                                                <div class="col-md-5 product-name">
+                                                    <div class="product-name">
+                                                        <h4> <u>[[orderItem.product.name]]</u></h4>
+                                                        <div class="product-info">
+
+                                                            <div v-if="orderItem.orderFlavor">Sabor: <span
+                                                                    class="value">[[orderItem.orderFlavor]]</span>
+                                                            </div>
+                                                            <div v-if="orderItem.orderFlavorCoverage">Sabor Cobertura:
+                                                                <span class="value">
+                                                                    [[orderItem.orderFlavorCoverage]]</span>
+
+                                                            </div>
+                                                            <div v-if="orderItem.orderFlavorBizcocho">Sabor Bizcocho:
+                                                                <span
+                                                                    class="value">[[orderItem.orderFlavorBizcocho]]</span>
+                                                            </div>
+
+
+                                                            <div v-if="orderItem.box_product.length!=0"> <u> N°
+                                                                    Galletas
+                                                                    x sabor:</u></div>
+                                                            <div v-for="cookie in orderItem.box_product"
+                                                                v-if="orderItem.box_product.length!=0">
+
+                                                                <span class="value">[[cookie.orderFlavor]]:
+                                                                    [[cookie.quantity]]</span>
+
+
+                                                            </div>
+
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4 quantity">
+                                                    <br>
+                                                    <label for="quantity">Cantidad: </label>
+                                                    <div class="input-group quantity-input">
+                                                        <span class="input-group-prepend">
+                                                            <button
+                                                                @click="updateItemQuantity(orderItem.quantity-1,indexArray,orderItem.id)"
+                                                                type="button"
+                                                                class="btn btn-outline-secondary btn-number btn-sm"
+                                                                :disabled="!canQuantityGoDown(orderItem.quantity)"
+                                                                data-type="minus" data-field="quant[1]">
+                                                                <span class="fa fa-minus"></span>
+                                                            </button>
+                                                        </span>
+                                                        <span class="boxed"><b>[[orderItem.quantity]]</b></span>
+                                                        <span class="input-group-append">
+                                                            <button
+                                                                @click="updateItemQuantity(orderItem.quantity+1,indexArray,orderItem.id)"
+                                                                type="button"
+                                                                class="btn btn-outline-secondary btn-number btn-sm"
+                                                                :disabled="!canQuantityGoUp(orderItem.quantity)"
+                                                                data-type="plus" data-field="quant[1]">
+                                                                <span class="fa fa-plus"></span>
+                                                            </button>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <div class="row align-items-center">
+                                                        <span class="col-md-6 ms-auto">
+                                                            Importe:<br>
+                                                            <span>
+                                                                <b>[[(orderItem.product.price *
+                                                                    orderItem.quantity).toFixed(2)]]&nbsp;S/.</b></span>
+                                                        </span>
+                                                        <br>
+                                                        <span class="col-md-1 ms-auto">
+                                                            <br>
+                                                            <button class="btn btn-danger btn-sm rounded-0"
+                                                                type="button" data-placement="top" title="Delete"
+                                                                v-on:click="deleteItem(orderItem.id, indexArray)"><i
+                                                                    class="fa fa-trash"></i></button>
+                                                        </span>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="col-md-12 col-lg-4">
+                        <div class="summary">
+                            <h3>Resumen</h3>
+                            <div class="summary-item"><span class="text">Importe Sub-Total</span><span
+                                    class="price">[[calcularSubTotal()]] S/.</span>
+                            </div>
+
+                            <div class="summary-item"><span class="text">Codigo de cupon<br>
+                                    <div class="input-group mb-3"><input type="text" class="form-control"
+                                            placeholder="Ponga su código aquí">
+                                        <div class="input-group-append">
+                                            <button class="btn btn-primary" type="button">Enviar</button>
+                                        </div>
+                                    </div>
+                                </span>
+                            </div>
+                            <div class="summary-item"><span class="text">Descuento</span><span class="price">-0
+                                    S/.</span>
+                            </div>
+                            <div class="summary-item"><span class="text">Total</span><span
+                                    class="price">[[calcularSubTotal()]] S/.</span>
+                            </div>
+                            <a href="/checkout" type="button" class="btn btn-primary btn-lg btn-block"
+                                :class="{disabled:dbOrderItems.length===0}">Ir a
+                                Caja</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+
+
+
+{% endblock body %}
+{% block js %}
+<!-- main vue -->
+<script type="module" src="{% static 'js/components/Cars.js' %}"></script>
+<!-- utils -->
+<script type="module" src="{% static 'js/api.js' %}"></script>
+<script type="module" src="{% static 'js/utils/LocalStorage.js' %}"></script>
+{% endblock js %}

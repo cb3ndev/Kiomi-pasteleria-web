@@ -1,0 +1,166 @@
+{% extends 'index.html' %}
+{% load static %}
+{% block title %} Detalles {% endblock title %}
+
+{% block body %}
+
+<!--
+
+<div id="product-details" class="container">
+	<h2>Detalles de un producto</h2>
+	<p>[[ dbProductDetails.name ]]</p>
+	<img :src="dbProductDetails.image_1" class="card-img-top">
+	<p>[[ dbProductDetails.description]]</p>
+	<p>[[ dbProductDetails.price ]]</p>
+	<p>[[ dbProductDetails.flavor ]]</p>
+</div> -->
+
+<!-- Page Content -->
+
+<div id="product-details" class="container mt-5 mb-5">
+
+	<div class="card">
+		<div class="row g-0">
+			<div class="col-md-6">
+				<div class="d-flex flex-column justify-content-center">
+					<div class="main_image">
+						<img class="img-fluid" v-if="imgPrincipal===0" :src="dbProductDetails.image_1" width="540">
+						<img class="img-fluid" v-if="imgPrincipal===1" :src="dbProductDetails.image_2" width="540">
+						<img class="img-fluid" v-if="imgPrincipal===2" :src="dbProductDetails.image_3" width="540">
+						<img class="img-fluid" v-if="imgPrincipal===3" :src="dbProductDetails.image_4" width="540">
+						<img class="img-fluid" v-if="imgPrincipal===4" :src="dbProductDetails.image_5" width="540">
+					</div>
+					<div class="thumbnail_images">
+						<ul id="thumbnail">
+							<li :class="{thumbnail_selected: imgPrincipal===0}" v-if="dbProductDetails.image_1"
+								@click="changeImage(0)">
+								<img class="img-fluid" :src="dbProductDetails.image_1" width="90">
+							</li>
+							<li :class="{thumbnail_selected: imgPrincipal===1}" v-if="dbProductDetails.image_2"
+								@click="changeImage(1)">
+								<img class="img-fluid" :src="dbProductDetails.image_2" width="90">
+							</li>
+							<li :class="{thumbnail_selected: imgPrincipal===2}" v-if="dbProductDetails.image_3"
+								@click="changeImage(2)">
+								<img class="img-fluid" :src="dbProductDetails.image_3" width="90">
+							</li>
+							<li :class="{thumbnail_selected: imgPrincipal===3}" v-if="dbProductDetails.image_4"
+								@click="changeImage(3)">
+								<img class="img-fluid" :src="dbProductDetails.image_4" width="90">
+							</li>
+							<li :class="{thumbnail_selected: imgPrincipal===4}" v-if="dbProductDetails.image_5"
+								@click="changeImage(4)">
+								<img class="img-fluid" :src="dbProductDetails.image_5" width="90">
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-6">
+				<div class="p-3 right-side" v-if="dbProductDetails.length!==0">
+					<div class="d-flex justify-content-between align-items-center">
+						<h2 class="tittle">[[ dbProductDetails.name ]]</h2>
+					</div>
+					<div class="mt-2 pr-3 content">
+						<p class="description">[[ dbProductDetails.description]]</p>
+					</div>
+					<h3 class="tittle">Precio: [[ dbProductDetails.price ]] S/.</h3>
+					<hr>
+					<!-- si el producto es torta maiyu -->
+					<div v-if="dbProductDetails.categoria.code==='1'">
+						<h4 class="tittle">Seleccionar Cantidad</h4>
+
+						<select class="form-select" aria-label="Default select example" name="orderItemsQuantityTorta"
+							v-model="orderItems.quantity">
+							<option v-for="index in 6" :key="index" :value="index">[[index]]</option>
+						</select>
+
+						<h4>Seleccionar Sabor de Bizcocho</h4>
+						<select class="form-select form-select-lg mb-3" name="select" id="select" aria-selected="false"
+							v-model="orderItems.orderFlavorBizcocho">
+							<option v-for="flavor in flavorBizcocho" :value="flavor.id" :key="flavor.id">
+								[[flavor.flavor]]
+							</option>
+						</select>
+						<h4>Seleccionar Sabor de Cobertura</h4>
+						<select class="form-select form-select-lg mb-3" name="select" id="select" aria-selected="false"
+							v-model="orderItems.orderFlavorCoverage">
+							<option v-for="flavor in flavorCoverage" :value="flavor.id" :key="flavor.id">
+								[[flavor.flavor]]
+							</option>
+						</select>
+
+						<button class="btn btn-primary" @click="handleCreateOrderItem"
+							v-bind:class="[(orderItems.quantity!==0 && orderItems.orderFlavorBizcocho!==null && orderItems.orderFlavorCoverage!==null) ? '' :'disabled']">Añadir
+							al carrito</button>
+
+					</div>
+					<!-- si el producto es galletas -->
+					<div v-if="dbProductDetails.categoria.code==='2'">
+						<h4 class="tittle">Seleccionar Cantidad de cajas</h4>
+
+						<select class="form-select" aria-label="Default select example" v-model="orderItems.quantity">
+							<option v-for="index in 6" :key="index" :value="index">[[index]]</option>
+						</select>
+
+						<h4>Seleccionar Sabor y cantidad</h4>
+						<form v-for="(flavor,index) in flavor" :key="flavor.id">
+							[[flavor.flavor]]
+							<select class="form-select" aria-label="Default select example" :name="flavor.flavor"
+								id="input-arrows-number" v-on:change="handleCreateOrderItemCookies($event,flavor.id)"
+								:disabled="orderItems.quantity===0" v-model="cantidadPorDefectoGalletas[index]">
+								<!-- El v-model de arriba en "select" se usó para que sirva como valor por defecto
+								para todos los options -->
+								<option v-for="index in selectCookies" :key="index" :value="index">[[index]]
+								</option>
+							</select>
+						</form>
+						<h5>La suma total de galletas es de [[galletasDentroDeCaja]]</h5>
+						<a class="btn btn-primary"
+							v-bind:class="[(galletasDentroDeCaja===36 && orderItems.quantity!==0) ? '' :'disabled']"
+							@click="validateOrderItemCookies">Añadir al Carrito</a>
+					</div>
+
+					<!-- si el producto es otros -->
+					<div v-if="dbProductDetails.categoria.code==='3'">
+						<h4 class="tittle">Seleccionar Cantidad</h4>
+
+						<select class="form-select" aria-label="Default select example" name="orderItemsQuantity"
+							v-model="orderItems.quantity">
+							<option v-for="index in 6" :key="index" :value="index">[[index]]</option>
+						</select>
+
+						<div v-if="[[flavor]]!=''">
+							<h4>Seleccionar Sabor</h4>
+							<select class="form-select form-select-lg mb-3" name="select" id="select"
+								aria-selected="true" v-model="orderItems.orderFlavor">
+								<option v-for="flavor in flavor" :value="flavor.id" :key="flavor.id">
+									[[flavor.flavor]]
+								</option>
+							</select>
+						</div>
+						<div v-if="[[flavor]]!=''">
+							<button class="btn btn-primary" @click="handleCreateOrderItem"
+								v-bind:class="[(orderItems.orderFlavor!==null && orderItems.quantity!==0) ? '' :'disabled']">Añadir
+								al carrito</button>
+						</div>
+						<div v-if="[[flavor]]==''">
+							<button class="btn btn-primary" @click="handleCreateOrderItem"
+								v-bind:class="[(orderItems.quantity!==0) ? '' :'disabled']">Añadir
+								al carrito</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- /.row -->
+</div>
+{% endblock body %}
+{% block js %}
+<!-- main vue -->
+<script type="module" src="{% static 'js/components/ProductDetails.js' %}"></script>
+<!-- utils -->
+<script type="module" src="{% static 'js/api.js' %}"></script>
+<script type="module" src="{% static 'js/utils/LocalStorage.js' %}"></script>
+{% endblock js %}

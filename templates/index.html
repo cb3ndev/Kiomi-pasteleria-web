@@ -1,0 +1,239 @@
+{% load static %}
+{% load account socialaccount %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{% block title %}kiomi{% endblock title %}</title>
+  <link rel="shortcut icon" href="/images/new_logo_ico.ico" type="image/x-icon" />
+  <!-- bootstrap 5 cdn css -->
+  <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous"> -->
+  <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}" />
+  <link rel="stylesheet" href="{% static 'css/templatemo.css' %}" />
+  <!-- main styles -->
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;200;300;400;500;700;900&display=swap" />
+  <link rel="stylesheet" href="{% static 'css/fontawesome.min.css' %}" />
+  <link rel="stylesheet" href="{% static 'css/main.css' %}" />
+  <!-- vue.js cdn -->
+  <script src="https://unpkg.com/vue@2.6.14/dist/vue.js"></script>
+  <script type="text/javascript">
+    let user = '{{request.user}}'
+  </script>
+</head>
+
+<body>
+  <!-- navbar -->
+
+  <nav id="car-number-items" class="
+        navbar navbar-expand-lg navbar-light
+        shadow-sm
+        p-1
+        mb-2
+        bg-body
+        rounded
+        bg-white
+      ">
+    <div class="container d-flex justify-content-between align-items-center">
+      <a class="navbar-brand text-success logo h1 d-flex align-items-center" href="/">
+        <img src="/images/new_logo.png" alt="" width="80" height="80" class="d-inline-block align-text-top" />
+        <h1 class="font-georgia-bold">Dulces Kiomi</h1>
+      </a>
+      <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse"
+        data-bs-target="#templatemo_main_nav" aria-controls="navbarSupportedContent" aria-expanded="false"
+        aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="
+            align-self-center
+            collapse
+            navbar-collapse
+            flex-fill
+            d-lg-flex
+            justify-content-lg-between
+          " id="templatemo_main_nav">
+        <div class="flex-fill">
+          <ul class="nav navbar-nav d-flex justify-content-between mx-lg-auto">
+            <li class="nav-item">
+              <a class="nav-link font-kaleko" href="/">Inicio</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link font-kaleko" href="/about">Acerca de</a>
+            </li>
+            <!-- <li class="nav-item">
+                            <a class="nav-link" href="/store">Pasteleria</a>
+                        </li> -->
+            <li class="nav-item">
+
+              <a class="nav-link" href="/car" :key="numItemscarro">
+                <span class="badge badge-pill btn-success" v-if="numItemscarro != 0">[[numItemscarro]]</span>
+                <span><i class="fas fa-shopping-cart fa-lg"></i></span>
+              </a>
+
+            </li>
+          </ul>
+        </div>
+        <div class="navbar align-self-center d-flex">
+          <!-- <div class="d-lg-none flex-sm-fill mt-3 mb-4 col-7 col-sm-auto pr-3">
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="inputMobileSearch" placeholder="Search ...">
+                            <div class="input-group-text">
+                                <i class="fa fa-fw fa-search"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <a class="nav-icon d-none d-lg-inline" href="#" data-bs-toggle="modal"
+                        data-bs-target="#templatemo_search">
+                        <i class="fa fa-fw fa-search text-dark mr-2"></i>
+                    </a> -->
+          <!-- <a class="nav-icon position-relative text-decoration-none" href="/car">
+                        <i class="fa fa-fw fa-cart-arrow-down text-dark mr-1"></i>
+                        <span id="car-number-items" v-if="numItemscarro != 0"
+                            class="position-absolute top-0 left-100 translate-middle badge rounded-pill bg-light text-dark"
+                            :key="numItemscarro">[[numItemscarro]]</span>
+                    </a> -->
+          <div class="dropdown">
+            <button class="btn btn-success dropdown-toggle" type="button" id="dropdownMenuButton1"
+              data-bs-toggle="dropdown" aria-expanded="false">
+              {% if request.user.is_authenticated %}
+              Bienvenido
+              {{request.user}}
+              {% else %}
+              LOGIN/REGISTER
+              {% endif %}
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+              {% if request.user.is_authenticated %}
+              <li>
+                <a class="dropdown-item" href="/profile">Ver/Editar Perfil</a>
+              </li>
+              <li>
+                <a class="dropdown-item" href="/accounts/logout">Logout</a>
+              </li>
+              {% else %}
+              <!-- borra -->
+              {% include "socialaccount/snippets/provider_list.html" with process="login"%}
+              <!-- borra -->
+              <!-- <li><a class="dropdown-item" href="/accounts/login">Login</a></li> -->
+              <!-- <li><a class="dropdown-item" href="/accounts/signup">Register</a></li> -->
+              {% endif %}
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+  <!-- Modal -->
+  <div class="modal fade bg-white" id="templatemo_search" tabindex="-1" role="dialog"
+    aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="w-100 pt-1 mb-5 text-right">
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form action="" method="get" class="modal-content modal-body border-0 p-0">
+        <div class="input-group mb-2">
+          <input type="text" class="form-control" id="inputModalSearch" name="q" placeholder="Search ..." />
+          <button type="submit" class="input-group-text bg-success text-light">
+            <i class="fa fa-fw fa-search text-white"></i>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+  <!-- navbar -->
+  {% block body %}
+
+  {% endblock body %}
+
+  <!-- Start Footer -->
+  <footer class="bg-white" id="tempaltemo_footer">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-4 pt-5">
+          <h2 class="h2 text-success border-bottom pb-3 border-light logo font-georgia-bold">
+            Kiomi
+          </h2>
+          <ul class="list-unstyled text-light footer-link-list">
+            <li>
+              <i class="fa fa-phone fa-fw"></i>
+              <a class="text-decoration-none" href="tel:974 275 551">974 275 551</a>
+            </li>
+            <li>
+              <i class="fa fa-envelope fa-fw"></i>
+              <a class="text-decoration-none" href="mailto:pasteleriakiomi@gmail.com">pasteleriakiomi@gmail.com</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="row text-light mb-4">
+        <div class="col-12 mb-3">
+          <div class="w-100 my-3 border-top border-light"></div>
+        </div>
+        <div class="col-auto me-auto">
+          <ul class="list-inline text-left footer-icons">
+            <li class="
+                  list-inline-item
+                  border border-light
+                  rounded-circle
+                  text-center
+                ">
+              <a class="text-light text-decoration-none" target="_blank"
+                href="https://www.facebook.com/pasteleriakiomi"><i
+                  class="text-light-none fab fa-facebook-f fa-lg fa-fw"></i></a>
+            </li>
+            <li class="
+                  list-inline-item
+                  border border-light
+                  rounded-circle
+                  text-center
+                ">
+              <a class="text-light text-decoration-none" target="_blank"
+                href="https://www.instagram.com/pasteleriakiomi/"><i class="fab fa-instagram fa-lg fa-fw"></i></a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="w-100 bg-black py-3">
+      <div class="container">
+        <div class="row pt-2">
+          <div class="col-12">
+            <p class="text-center text-light">
+              Copyright &copy; 2021 Kiomi
+              <!-- | Designed by
+                <a rel="sponsored" href="https://templatemo.com" target="_blank"
+                  >TemplateMo</a
+                > -->
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  {% block js %}
+
+  {% endblock js %}
+  <!-- bootstrap 5 cdn javascript -->
+  <!-- csrf token javascript -->
+  <script type="module" src="{% static 'js/utils/js.cookie.js' %}"></script>
+  <!-- Start script -->
+  <script src="{% static 'js/jquery-1.11.0.min.js' %}"></script>
+  <script src="{% static 'js/jquery-migrate-1.2.1.min.js' %}"></script>
+  <script src="{% static 'js/bootstrap.bundle.min.js' %} "></script>
+  <script src="{% static 'js/templatemo.js' %}"></script>
+  <!-- main vue -->
+
+  <script type="module" src="{% static 'js/components/CarIconNavbar.js' %}"></script>
+  <!-- vuejs datepicker and fix language -->
+  <script src="{% static 'js/vuejs-datepicker.min.js' %}"></script>
+  <script src="{% static 'js/vuejs-datepicker.es.js' %}"></script>
+</body>
+
+</html>

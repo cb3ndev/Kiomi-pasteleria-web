@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+
+<body>
+    <br>
+
+    <h2>Gracias por comprar en Kiomi Store!!!</h2>
+    <h3>El código de tu orden es: {{ orderUniqueIdentifier }}</h3>
+
+
+    <h3>Detalles del envío:</h3>
+
+    Persona que recogera: {{ shippingAdress.nombrePersonaEnvio }} <br />
+    Dirección: {{ shippingAdress.address }} <br />
+    Distrito: {{ shippingAdress.distrito }} <br />
+    Teléfono: {{ shippingAdress.phoneNumber }}<br />
+    Referencia: {{ shippingAdress.reference }}<br />
+    Fecha del delivery: {{ dateDelivery }}
+
+    <!-- <h3>
+        Contact Details:
+    </h3>
+    Email: {{ order.email }} <br />
+    Phone: {{ order.phone }} -->
+
+    <h2>Detalles de la compra:</h2>
+
+    <table>
+
+        <thead>
+            <tr>
+                <th>| Producto |</th>
+                <!-- <th>Cantidad</th> -->
+                <th>| Precio x Unidad |</th>
+                <th>| Unidades |</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for item in items %}
+            <tr>
+                <td>{{ item.product.name }} </td>
+                <td>{{ item.product.price|floatformat:2 }} S/. </td>
+                <td>x{{ item.quantity }} </td>
+                <!-- <td>{{ item.total_price }}</td> -->
+            </tr>
+            {% endfor %}
+
+        </tbody>
+        <tfoot>
+
+            <hr>
+
+            <tr>
+                <td> <b> <u> Costo Total:</u></b></td>
+                <td><b> {{cartTotal|floatformat:2}} S/.</b></td>
+            </tr>
+        </tfoot>
+
+    </table>
+</body>
+
+</html>
