@@ -52,6 +52,7 @@ new Vue({
   },
 
   created() {
+    window.location.replace(url);
     if (user !== "AnonymousUser") {
       this.getOrderItems();
     } else {
