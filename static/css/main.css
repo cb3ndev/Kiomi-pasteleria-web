@@ -46,6 +46,7 @@
   --second-color: #b0e0d9;
   --third-color: #ffddb9;
   --fourth-color: #f1f2f0;
+  --fifth-color: #a0000b;
   --black-color: #000000;
   --text-color: #290d18;
   --font: "Stem-Bold", sans-serif;
@@ -413,4 +414,30 @@ input[type="radio"] {
 
 .nav-item a:hover:after {
   width: 100%;
+}
+
+.link {
+  color: var(--black-color);
+  text-decoration: underline;
+  background-color: none;
+}
+.link:hover {
+  color: var(--fifth-color);
+  text-decoration: underline;
+  background-color: none;
+}
+link:link {
+  color: var(--fifth-color);
+  text-decoration: underline;
+  background-color: none;
+}
+link:visited {
+  color: var(--fifth-color);
+  text-decoration: underline;
+  background-color: none;
+}
+link:active {
+  color: var(--fifth-color);
+  text-decoration: underline;
+  background-color: none;
 }

@@ -34,14 +34,18 @@
 
                                 <div class="row align-items-center">
                                     <div class="col-md-3">
-                                        <img class="img-fluid mx-auto d-block image" :src="orderItem.product.image_1">
+                                        <a :href="'/product-details/?id='+orderItem.product.id">
+                                            <img class="img-fluid mx-auto d-block image"
+                                                :src="orderItem.product.image_1"></a>
                                     </div>
                                     <div class="col-md-8">
                                         <div class="info">
                                             <div class="row align-items-center">
                                                 <div class="col-md-5 product-name">
                                                     <div class="product-name">
-                                                        <h4> <u>[[orderItem.product.name]]</u></h4>
+                                                        <a :href="'/product-details/?id='+orderItem.product.id">
+                                                            <h4> <u class="link">[[orderItem.product.name]]</u></h4>
+                                                        </a>
                                                         <div class="product-info">
 
                                                             <div v-if="orderItem.orderFlavor">Sabor: <span
