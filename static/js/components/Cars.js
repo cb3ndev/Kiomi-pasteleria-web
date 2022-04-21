@@ -38,6 +38,8 @@ new Vue({
           el.product.image_1 = product.image_1;
           el.product.name = product.name;
           el.product.price = product.price;
+          el.product.id = product.id;
+
           /* el.orderFlavor = product.flavor.flavor;
           el.orderFlavorCoverage = product.flavorCoverage.flavor;
           el.orderFlavorBizcocho = product.flavorBizcocho.flavor; */
