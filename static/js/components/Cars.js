@@ -34,7 +34,7 @@ new Vue({
           //console.log(product.image_1);
 
           el.id = index;
-          el.product = [];
+          el.product = {};
           el.product.image_1 = product.image_1;
           el.product.name = product.name;
           el.product.price = product.price;
@@ -77,6 +77,7 @@ new Vue({
           .reduce((a, b) => a + b);
       }
     }
+    console.log("eweeeeeees");
   },
   methods: {
     getCookie(cName) {

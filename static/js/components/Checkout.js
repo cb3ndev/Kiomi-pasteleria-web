@@ -13,7 +13,8 @@ new Vue({
       dbCheckout: {
         cartItems: 0,
         cartTotal: 0,
-        items: [],
+        items: [], //Este se usara para pintar
+        dbItems: [], //Este se usara para enviar data al backend (en este items los sabores estaran con sus ids y no populados como en "items")
         orderUniqueIdentifier: "",
       },
       nombrePersonaEnvio: "",
@@ -55,14 +56,14 @@ new Vue({
       this.getOrderItems();
     } else {
       this.email = ""; //en caso no se este loggeado, el correo se volvera vacio por defecto (dejara de ser nulo como se declaro arriba)
-      const cartCookie = this.getCookie("cart");
-      this.dbCheckout.items = cartCookie;
+      this.dbCheckout.dbItems = this.getCookie("cart"); //este se usara para enviar a la bd (ver en las variables de vue)
+      this.dbCheckout.items = this.getCookie("cart");
       this.dbCheckout.items.forEach(function (el, index) {
         api.getProductDetails(el.product).then((product) => {
           //console.log(product.image_1);
 
           el.id = index;
-          el.product = [];
+          el.product = {};
           el.product.image_1 = product.image_1;
           el.product.name = product.name;
           el.product.price = product.price;
@@ -252,7 +253,7 @@ new Vue({
         dateDelivery: this.dateDelivery.getTime(),
       };
       if (user === "AnonymousUser") {
-        ProcessOrderInfo.items = this.dbCheckout.items;
+        ProcessOrderInfo.items = this.dbCheckout.dbItems;
         ProcessOrderInfo.identificador = this.dbCheckout.orderUniqueIdentifier;
       }
 
@@ -292,6 +293,7 @@ new Vue({
           },
           autoOpen: true, // Habilita la apertura automática del Checkout Pro
         }); */
+
         if (this.metodoPago === "tarjeta") {
           window.location.href = data["init_point"];
         } else if (this.metodoPago === "yape") {

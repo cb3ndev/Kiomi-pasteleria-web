@@ -37,7 +37,7 @@ new Vue({
       totalQuantityCarItems: 0, //añadido para que se pueda asignar su valor dentro del "then" de su función
       //valores por defecto solo para galletas, tener en cuenta que estos valores son estaticos, deben ser cambiados cada vez que
       //se aumenten o se disminuyan sabores a las galletas.
-      cantidadPorDefectoGalletas: [6, 12, 6], //debe tener la misma cantidad de valores que la cantidad de sabores
+      cantidadPorDefectoGalletas: [6, 12, 6, 12], //debe tener la misma cantidad de valores que la cantidad de sabores
       //OJO: NO PONER 0 COMO VALOR POR DEFECTO
     };
   },
@@ -69,11 +69,14 @@ new Vue({
 		*/
     api.getProductDetails(this.idDetails()).then((product) => {
       this.dbProductDetails = product;
+      //Las tres lineas de abajo guardan en una lista todos los sabores correspondientes al producto elegido
+      //Estas tres variables solo sirven para pinta en la plantilla HTML
       this.flavor = product.flavor;
       this.flavorBizcocho = product.flavorBizcocho;
       this.flavorCoverage = product.flavorCoverage;
 
-      if (this.flavor.length !== 0) {
+      //Para el caso de flavor, solo se le asignara un valor siempre y cuando no sea galleta (en la galleta los flavors se añaden en box_product)
+      if (this.flavor.length !== 0 && product.categoria.code !== "2") {
         this.orderItems.orderFlavor = product.flavor[0].id;
       }
       if (this.flavorBizcocho.length !== 0) {
@@ -87,6 +90,7 @@ new Vue({
       if (product.categoria.code === "2") {
         //Aqui se le asignara los valores por defecto a lista NumberItemCookies para que funcione bien el código
         //esto es solo para galletas
+        this.orderItems.orderFlavor = null;
         product.flavor.forEach((element, index) => {
           this.NumberItemsCookies.push([
             element.id,
