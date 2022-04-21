@@ -252,14 +252,17 @@ class CheckoutViewSet(viewsets.ViewSet):
 class ProcessOrderViewSet(viewsets.ViewSet):
     def create(self, request, *args, **kwargs):
         # mercadopago
-
-        ######
         print('yep request data: ', request.data)
-
         identificador = request.data["identificador"]
+        nombrePagador = request.data["nombrePagador"]
+        apellidoPagador = request.data["apellidoPagador"]
+        dateDelivery = request.data["dateDelivery"]
+
+        total = float(request.data["total"])
         # get customer
         if request.user.is_authenticated:
             customer = request.user.customer
+            # get or create order with a random orderUniqueIdentifier
             order, created = Order.objects.get_or_create(
                 customer=customer,
                 complete=0
@@ -268,59 +271,46 @@ class ProcessOrderViewSet(viewsets.ViewSet):
             order = Order.objects.get(
                 complete=0, orderUniqueIdentifier=identificador
             )
+            ##########INICIO: En esta parte se posteara los productos de la orden: ##########
+            # Esto solo se hara para cuando el user no este loggeado:
+            for item in request.data['items']:
+                order_item = None
+                if item["orderFlavor"] != None:
+                    order_item = OrderItem.objects.create(
+                        product=Product.objects.get(id=item["product"]),
+                        order=order, quantity=item["quantity"],
+                        orderFlavor=Flavor.objects.get(id=item["orderFlavor"]),
+                        validateOrderItem=True)
+                    order_item.save()
+                elif item["orderFlavorCoverage"] != None and item["orderFlavorBizcocho"] != None:
+                    order_item = OrderItem.objects.create(
+                        product=Product.objects.get(id=item["product"]),
+                        order=order, quantity=item["quantity"],
+                        orderFlavorCoverage=FlavorCoverage.objects.get(
+                            id=item["orderFlavorCoverage"]),
+                        orderFlavorBizcocho=FlavorBizcocho.objects.get(
+                            id=item["orderFlavorBizcocho"]),
 
-        nombrePagador = request.data["nombrePagador"]
-        apellidoPagador = request.data["apellidoPagador"]
-        dateDelivery = request.data["dateDelivery"]
-        # get or create order with a random orderUniqueIdentifier
+                        validateOrderItem=True)
+                    order_item.save()
+                else:
+                    order_item = OrderItem.objects.create(
+                        product=Product.objects.get(id=item["product"]),
+                        order=order, quantity=item["quantity"],
+                        validateOrderItem=True)
+                    order_item.save()
+                    for grupoGalletitas in item['box_product']:
+                        BoxProduct.objects.create(
+                            order_item=order_item,
+                            orderFlavor=Flavor.objects.get(
+                                id=grupoGalletitas["orderFlavor"]),
+                            quantity=grupoGalletitas["quantity"]
+                        ).save()
 
-        total = float(request.data["total"])
+                    print("a")
+            ############################FIN########################################3#
+
         order.nombrePagadorFull = nombrePagador + " " + apellidoPagador
-
-        # print("a: ", request.data['items'][0]["product"], "type: ", type(
-        #     request.data['items'][0]["product"]))
-        # return Response({"a": "a"}, status=status.HTTP_200_OK)
-
-        ##########INICIO: En esta parte se posteara los productos de la orden: ##########
-        # Esto solo se hara para cuando el user no este loggeado:
-        for item in request.data['items']:
-            order_item = None
-            if item["orderFlavor"] != None:
-                order_item = OrderItem.objects.create(
-                    product=Product.objects.get(id=item["product"]),
-                    order=order, quantity=item["quantity"],
-                    orderFlavor=Flavor.objects.get(id=item["orderFlavor"]),
-                    validateOrderItem=True)
-                order_item.save()
-            elif item["orderFlavorCoverage"] != None and item["orderFlavorBizcocho"] != None:
-                order_item = OrderItem.objects.create(
-                    product=Product.objects.get(id=item["product"]),
-                    order=order, quantity=item["quantity"],
-                    orderFlavorCoverage=FlavorCoverage.objects.get(
-                        id=item["orderFlavorCoverage"]),
-                    orderFlavorBizcocho=FlavorBizcocho.objects.get(
-                        id=item["orderFlavorBizcocho"]),
-
-                    validateOrderItem=True)
-                order_item.save()
-            else:
-                order_item = OrderItem.objects.create(
-                    product=Product.objects.get(id=item["product"]),
-                    order=order, quantity=item["quantity"],
-                    validateOrderItem=True)
-                order_item.save()
-                for grupoGalletitas in item['box_product']:
-                    BoxProduct.objects.create(
-                        order_item=order_item,
-                        orderFlavor=Flavor.objects.get(
-                            id=grupoGalletitas["orderFlavor"]),
-                        quantity=grupoGalletitas["quantity"]
-                    ).save()
-
-                print("a")
-
-        ############################FIN########################################3#
-
         if total == float(order.get_cart_total):
             if request.data["metodoPago"] == "tarjeta":
                 # AQUI REALIZAR EL PAGO (MercadoPago)
