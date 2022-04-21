@@ -281,7 +281,7 @@ class ProcessOrderViewSet(viewsets.ViewSet):
         #     request.data['items'][0]["product"]))
         # return Response({"a": "a"}, status=status.HTTP_200_OK)
 
-        # INICIO: En esta parte se posteara los productos de la orden:
+        ##########INICIO: En esta parte se posteara los productos de la orden: ##########
         # Esto solo se hara para cuando el user no este loggeado:
         for item in request.data['items']:
             order_item = None
@@ -319,7 +319,7 @@ class ProcessOrderViewSet(viewsets.ViewSet):
 
                 print("a")
 
-        ####################################################################3#
+        ############################FIN########################################3#
 
         if total == float(order.get_cart_total):
             if request.data["metodoPago"] == "tarjeta":
