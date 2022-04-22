@@ -44,6 +44,9 @@ new Vue({
       dateDelivery: null,
       //la data que sigue no se guarda, solo se le envia a mercadopago
       documentoDNI: "",
+      //A continuación se usara una variable booleana para cuando se presione el boton de PAGAR,
+      //Se escondera lo relacionado a checkout para que el usario no pueda tocar nada si ya presiono este boton
+      isPaymentAlreadyPressed: false,
     };
   },
   //component cdn vuejs-datepicker
@@ -103,6 +106,12 @@ new Vue({
       //this.dbCheckout.orderUniqueIdentifier = "awa123"; //cuando no se esta loggeado se le dara el valor despues
       //en el post validateShipping
     }
+  },
+  beforeDestroy() {
+    console.log("antes de destruido!!!!!!");
+  },
+  destroyed() {
+    console.log("destruido!!!!!!");
   },
 
   methods: {
@@ -295,19 +304,25 @@ new Vue({
         }); */
 
         if (this.metodoPago === "tarjeta") {
+          this.isPaymentAlreadyPressed = true;
           window.location.href = data["init_point"];
+          console.log("llebvando a payment...");
         } else if (this.metodoPago === "yape") {
+          this.isPaymentAlreadyPressed = true;
           window.location.href =
             "/payment/?status=pending&dateDelivery=" +
             this.dateDelivery.getTime() +
             "&identificador=" +
             this.dbCheckout.orderUniqueIdentifier;
+          console.log("llebvando a payment...");
         } else {
+          this.isPaymentAlreadyPressed = true;
           window.location.href =
             "/payment/?status=pending&dateDelivery=" +
             this.dateDelivery.getTime() +
             "&identificador=" +
             this.dbCheckout.orderUniqueIdentifier;
+          console.log("llebvando a payment...");
         }
         //NOTA (ver arriba): En caso de la tarjeta la fecha se enviara por el url cuando el pago sea exitoso
         //en caso de yape se enviara directamente aqui, esto lo recivira el views de "payment" y lo posteara en order

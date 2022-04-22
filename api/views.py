@@ -253,7 +253,7 @@ class ProcessOrderViewSet(viewsets.ViewSet):
     def create(self, request, *args, **kwargs):
         # mercadopago
         print('yep request data: ', request.data)
-        identificador = request.data["identificador"]
+
         nombrePagador = request.data["nombrePagador"]
         apellidoPagador = request.data["apellidoPagador"]
         dateDelivery = request.data["dateDelivery"]
@@ -267,7 +267,9 @@ class ProcessOrderViewSet(viewsets.ViewSet):
                 customer=customer,
                 complete=0
             )
+            identificador = order.orderUniqueIdentifier
         else:
+            identificador = request.data["identificador"]
             order = Order.objects.get(
                 complete=0, orderUniqueIdentifier=identificador
             )
