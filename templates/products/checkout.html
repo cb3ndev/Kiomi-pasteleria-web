@@ -3,64 +3,64 @@
 {% block title %} Checkout {% endblock title %}
 {% block body %}
 <div id="checkout">
-
-  <div v-if="dbCheckout.items.length!==0" class="section">
-    <div class="container">
-      <h2 class="font-kaleko">Caja</h2>
-      [[nombrePagador]] [[apellidoPagador]]
-      <div class="row">
-        <div id="resumen" class="col-lg mx-auto">
-          <div class="box-element">
-            <a class="btn btn-primary" href="/car">&#x2190; Regresar al carro</a>
-            <hr />
-            <h4 class="font-stem-bold">Resumen de la Orden</h4>
-            <hr />
-            <template v-if="isLoading">
-              <p style="text-align: center;">Cargando ...</p>
-            </template>
-            <div class="cart-row">
-              <div style="flex: 1">
-
-              </div>
-              <div style="flex: 1">
-                <p class="font-times-roman"><b>Producto</b></p>
-              </div>
-              <div style="flex: 1">
-                <p class="font-times-roman"><b>Precio</b>x<b> Unidad</b></p>
-              </div>
-              <div style="flex: 1">
-                <p class="font-times-roman"><b>Unidades</b></p>
-              </div>
-            </div>
-            <template v-if="!isLoading">
-              <div v-for="item in dbCheckout.items" class="cart-row">
-                <template v-if="typeof item.product !== 'number'">
-                  <div style="flex: 1">
-                    <img class="img-fluid row-image" :src="item.product.image_1" :alt="item.product.name" />
-                  </div>
-                  <div style="flex: 1">
-                    <p class="font-georgia-italic">[[item.product.name]]</p>
-                  </div>
-                  <div style="flex: 1">
-                    <p>[[item.product.price.toFixed(2)]] S/.</p>
-                  </div>
-                  <div style="flex: 1">
-                    <p>x[[item.quantity]]</p>
-                  </div>
-                </template>
-              </div>
-
-              <h5 class="font-times-roman">Items: [[dbCheckout.cartItems]]</h5>
-              <h5 class="font-times-roman">Total: [[calcularTotal()]] S/.</h5>
-            </template>
-          </div>
-        </div>
-
+  <template v-if="!isPaymentAlreadyPressed">
+    <div v-if="dbCheckout.items.length!==0" class="section">
+      <div class="container">
+        <h2 class="font-kaleko">Caja</h2>
+        [[nombrePagador]] [[apellidoPagador]]
         <div class="row">
-          <div class="col-lg-6">
-            <div class="box-element" id="form-wrapper">
-              <form id="form">
-                <!-- <div id="user-info">
+          <div id="resumen" class="col-lg mx-auto">
+            <div class="box-element">
+              <a class="btn btn-primary" href="/car">&#x2190; Regresar al carro</a>
+              <hr />
+              <h4 class="font-stem-bold">Resumen de la Orden</h4>
+              <hr />
+              <template v-if="isLoading">
+                <p style="text-align: center;">Cargando ...</p>
+              </template>
+              <div class="cart-row">
+                <div style="flex: 1">
+
+                </div>
+                <div style="flex: 1">
+                  <p class="font-times-roman"><b>Producto</b></p>
+                </div>
+                <div style="flex: 1">
+                  <p class="font-times-roman"><b>Precio</b>x<b> Unidad</b></p>
+                </div>
+                <div style="flex: 1">
+                  <p class="font-times-roman"><b>Unidades</b></p>
+                </div>
+              </div>
+              <template v-if="!isLoading">
+                <div v-for="item in dbCheckout.items" class="cart-row">
+                  <template v-if="typeof item.product !== 'number'">
+                    <div style="flex: 1">
+                      <img class="img-fluid row-image" :src="item.product.image_1" :alt="item.product.name" />
+                    </div>
+                    <div style="flex: 1">
+                      <p class="font-georgia-italic">[[item.product.name]]</p>
+                    </div>
+                    <div style="flex: 1">
+                      <p>[[item.product.price.toFixed(2)]] S/.</p>
+                    </div>
+                    <div style="flex: 1">
+                      <p>x[[item.quantity]]</p>
+                    </div>
+                  </template>
+                </div>
+
+                <h5 class="font-times-roman">Items: [[dbCheckout.cartItems]]</h5>
+                <h5 class="font-times-roman">Total: [[calcularTotal()]] S/.</h5>
+              </template>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-lg-6">
+              <div class="box-element" id="form-wrapper">
+                <form id="form">
+                  <!-- <div id="user-info">
                 <div class="form-field">
                   <input
                     required
@@ -80,118 +80,118 @@
                   />
                 </div>
               </div> -->
-                <div id="shipping-info">
+                  <div id="shipping-info">
+                    <hr />
+                    <p>
+                    <h4 class="font-times-roman font-weight-bold">Información para el Envío:</h4>
+                    </p>
+                    <hr />
+                    <div class="form-group">
+                      <label class="font-times-roman">Persona a quien se hara el envío:</label>
+                      <input required class="form-control" :class="{'is-invalid': isInvalid.nombrePersonaEnvio}"
+                        type="text" v-model="nombrePersonaEnvio" placeholder="Escriba su nombre completo..."
+                        pattern="^[a-zA-Z]+(([',. -][a-zA-Z ])?[a-zA-Z]*)*$" />
+                      <small class="invalid-feedback">
+                        LLene de forma correcta este campo.
+                      </small>
+
+                    </div>
+
+                    <div class="form-group">
+                      <label class="font-times-roman">Num. de Celular:</label>
+                      <input required class="form-control" :class="{'is-invalid': isInvalid.phoneNumber}" type="text"
+                        min="0" v-model="phoneNumber" placeholder="Escriba su numero de telefono.." />
+                      <small class="invalid-feedback">
+                        LLene de forma correcta el número de celular.
+                      </small>
+
+                    </div>
+                    <!-- El correo solo apracera en pantalla si no se esta loggeado -->
+                    <div v-if="email!==null" class="form-group">
+                      <label class="font-times-roman">Correo Electrónico:</label>
+                      <input class="form-control" :class="{'is-invalid': isInvalid.email}" type="email" v-model="email"
+                        placeholder="Escriba su correo electrónico.." required />
+                      <small class="invalid-feedback">
+                        LLene de forma correcta el correo electrónico.
+                      </small>
+
+                    </div>
+
+                    <div class="form-group ">
+                      <label class="font-times-roman">Distrito:</label>
+                      <input required class="form-control" :class="{'is-invalid': isInvalid.distrito}" type="text"
+                        v-model="distrito" placeholder="Escriba su distrito aqui..." />
+                      <small class="invalid-feedback">
+                        LLene de forma correcta este campo.
+                      </small>
+
+                    </div>
+                    <div class="form-group ">
+                      <label class="font-times-roman">Dirección de envío:</label>
+                      <input required class="form-control" :class="{'is-invalid': isInvalid.address}" type="text"
+                        v-model="address" placeholder="Escriba su dirección aqui..." />
+                      <small class="invalid-feedback">
+                        LLene de forma correcta este campo.
+                      </small>
+
+                    </div>
+
+
+                    <div class="form-group">
+                      <label class="font-times-roman">Referencia (opcional):</label>
+                      <input class="form-control" type="text" v-model="reference"
+                        placeholder="Escriba una referencia de su direccion para llevar mas rapido su pedido ..." />
+
+                    </div>
+                    <hr />
+                    <div class="form-group">
+                      <label class="font-times-roman">Seleccionar Fecha de Entrega:</label>
+                      <vuejs-datepicker :class="{'is-invalid': isInvalid.dateDelivery}"
+                        @focusin.native="handleContinueDate" :language="es" :disabled-dates="disabledDates"
+                        v-model="dateDelivery"></vuejs-datepicker>
+                      <small class="invalid-feedback">
+                        La fecha es obligatoria
+                      </small>
+                    </div>
+                  </div>
                   <hr />
-                  <p>
-                  <h4 class="font-times-roman font-weight-bold">Información para el Envío:</h4>
-                  </p>
-                  <hr />
-                  <div class="form-group">
-                    <label class="font-times-roman">Persona a quien se hara el envío:</label>
-                    <input required class="form-control" :class="{'is-invalid': isInvalid.nombrePersonaEnvio}"
-                      type="text" v-model="nombrePersonaEnvio" placeholder="Escriba su nombre completo..."
-                      pattern="^[a-zA-Z]+(([',. -][a-zA-Z ])?[a-zA-Z]*)*$" />
-                    <small class="invalid-feedback">
-                      LLene de forma correcta este campo.
-                    </small>
 
-                  </div>
-
-                  <div class="form-group">
-                    <label class="font-times-roman">Num. de Celular:</label>
-                    <input required class="form-control" :class="{'is-invalid': isInvalid.phoneNumber}" type="text"
-                      min="0" v-model="phoneNumber" placeholder="Escriba su numero de telefono.." />
-                    <small class="invalid-feedback">
-                      LLene de forma correcta el número de celular.
-                    </small>
-
-                  </div>
-                  <!-- El correo solo apracera en pantalla si no se esta loggeado -->
-                  <div v-if="email!==null" class="form-group">
-                    <label class="font-times-roman">Correo Electrónico:</label>
-                    <input class="form-control" :class="{'is-invalid': isInvalid.email}" type="email" v-model="email"
-                      placeholder="Escriba su correo electrónico.." required />
-                    <small class="invalid-feedback">
-                      LLene de forma correcta el correo electrónico.
-                    </small>
-
-                  </div>
-
-                  <div class="form-group ">
-                    <label class="font-times-roman">Distrito:</label>
-                    <input required class="form-control" :class="{'is-invalid': isInvalid.distrito}" type="text"
-                      v-model="distrito" placeholder="Escriba su distrito aqui..." />
-                    <small class="invalid-feedback">
-                      LLene de forma correcta este campo.
-                    </small>
-
-                  </div>
-                  <div class="form-group ">
-                    <label class="font-times-roman">Dirección de envío:</label>
-                    <input required class="form-control" :class="{'is-invalid': isInvalid.address}" type="text"
-                      v-model="address" placeholder="Escriba su dirección aqui..." />
-                    <small class="invalid-feedback">
-                      LLene de forma correcta este campo.
-                    </small>
-
-                  </div>
-
-
-                  <div class="form-group">
-                    <label class="font-times-roman">Referencia (opcional):</label>
-                    <input class="form-control" type="text" v-model="reference"
-                      placeholder="Escriba una referencia de su direccion para llevar mas rapido su pedido ..." />
-
-                  </div>
-                  <hr />
-                  <div class="form-group">
-                    <label class="font-times-roman">Seleccionar Fecha de Entrega:</label>
-                    <vuejs-datepicker :class="{'is-invalid': isInvalid.dateDelivery}"
-                      @focusin.native="handleContinueDate" :language="es" :disabled-dates="disabledDates"
-                      v-model="dateDelivery"></vuejs-datepicker>
-                    <small class="invalid-feedback">
-                      La fecha es obligatoria
-                    </small>
-                  </div>
-                </div>
-                <hr />
-
-                <a href="#metodos-pago" type="button" class="btn btn-primary btn-lg btn-block"
-                  @click="handleContinue">Continuar al Pago</a>
-              </form>
+                  <a href="#metodos-pago" type="button" class="btn btn-primary btn-lg btn-block"
+                    @click="handleContinue">Continuar al Pago</a>
+                </form>
+              </div>
             </div>
-          </div>
 
-          <div id="metodos-pago" v-if="isActive" class="col-lg-6">
-            <div class="box-element">
-              <!-- For demo purpose -->
-              <h4 class="font-times-roman font-weight-bold">Elija el método de pago: </h4>
-              <div class="bg-white shadow-sm pt-4 pl-2 pr-2 pb-2">
-                <!-- Credit card form tabs -->
-                <ul role="tablist" class="nav bg-light nav-pills rounded nav-fill mb-3">
-                  <li class="nav-item"> <a data-toggle="pill" @click="changePaymentMethod('tarjeta')"
-                      class="nav-link font-kaleko" :class="{active : metodoPago==='tarjeta'}" href="#metodos-pago"> <i
-                        class="fas fa-credit-card mr-2"></i>
-                      Tarjeta
-                    </a> </li>
-                  <li class="nav-item"> <a data-toggle="pill" @click="changePaymentMethod('yape')"
-                      class="nav-link font-kaleko" :class="{active : metodoPago==='yape'}" href="#metodos-pago"> <i
-                        class="fas fa-mobile-alt mr-2"></i>
-                      Yape </a> </li>
+            <div id="metodos-pago" v-if="isActive" class="col-lg-6">
+              <div class="box-element">
+                <!-- For demo purpose -->
+                <h4 class="font-times-roman font-weight-bold">Elija el método de pago: </h4>
+                <div class="bg-white shadow-sm pt-4 pl-2 pr-2 pb-2">
+                  <!-- Credit card form tabs -->
+                  <ul role="tablist" class="nav bg-light nav-pills rounded nav-fill mb-3">
+                    <li class="nav-item"> <a data-toggle="pill" @click="changePaymentMethod('tarjeta')"
+                        class="nav-link font-kaleko" :class="{active : metodoPago==='tarjeta'}" href="#metodos-pago"> <i
+                          class="fas fa-credit-card mr-2"></i>
+                        Tarjeta
+                      </a> </li>
+                    <li class="nav-item"> <a data-toggle="pill" @click="changePaymentMethod('yape')"
+                        class="nav-link font-kaleko" :class="{active : metodoPago==='yape'}" href="#metodos-pago"> <i
+                          class="fas fa-mobile-alt mr-2"></i>
+                        Yape </a> </li>
 
-                  <!-- Se escondio el método plin debido a que no soporta mensajes, si se desea descomentar lo de abajo -->
-                  <!-- <li class="nav-item"> <a data-toggle="pill" @click="changePaymentMethod('plin')"
+                    <!-- Se escondio el método plin debido a que no soporta mensajes, si se desea descomentar lo de abajo -->
+                    <!-- <li class="nav-item"> <a data-toggle="pill" @click="changePaymentMethod('plin')"
                       class="nav-link font-kaleko" :class="{active : metodoPago==='plin'}" href="#metodos-pago"> <i
                         class="fas fa-mobile-alt mr-2"></i>
                       Plin </a> </li> -->
-                </ul>
-              </div> <!-- End -->
-              <!-- Credit card form content -->
-              <div class="tab-content">
-                <!-- credit card info-->
-                <div v-if="metodoPago==='tarjeta'" class="tab-pane fade show active pt-3 text-center">
-                  <form @submit="handlePayment">
-                    <!-- <div class="form-group">
+                  </ul>
+                </div> <!-- End -->
+                <!-- Credit card form content -->
+                <div class="tab-content">
+                  <!-- credit card info-->
+                  <div v-if="metodoPago==='tarjeta'" class="tab-pane fade show active pt-3 text-center">
+                    <form @submit="handlePayment">
+                      <!-- <div class="form-group">
                       <label>Nombre(s) del pagador:</label>
                       <input type="text" class="form-control" v-model="nombrePagador" required>
 
@@ -206,7 +206,7 @@
                       <input type="Number" class="form-control" v-model="documentoDNI" required>
 
                     </div> -->
-                    <!-- <div class="form-group"> <label for="username">
+                      <!-- <div class="form-group"> <label for="username">
                         <h6>Card Owner</h6>
                       </label> <input type="text" name="username" placeholder="Card Owner Name" required
                         class="form-control ">
@@ -240,65 +240,66 @@
                       </div> -->
 
 
+                      <div class="alert alert-info">
+                        <strong>IMPORTANTE!</strong>
+                        Al hacer click, se le redireccionará a una página de MercadoPago para proceder con el
+                        pago, si el pago es exitoso, regresará
+                        automaticamente a nuestra web. <br>
+                        <mark>Procure no cerrar la página hasta concluir con el pago! </mark>
+                      </div>
+
+
+
+
+                      <input class="btn btn-primary" type="submit" value="Ir al Pago" />
+                    </form>
+                  </div>
+
+                </div> <!-- End -->
+                <div v-if="metodoPago==='yape'" class="tab-pane fade show active pt-3 text-center">
+
+                  <p class="fs-5"><b> Inserte el nombre del usuario Yape: </b>
+                  </p>
+
+                  <form @submit="handlePayment">
+                    <div class="form-group">
+                      <label>Nombre(s):</label>
+                      <input type="text" class="form-control" v-model.trim="nombrePagador" required>
+
+                    </div>
+                    <div class="form-group">
+                      <label>Apellidos:</label>
+                      <input type="text" class="form-control" v-model.trim="apellidoPagador" required>
+
+                    </div>
+                    <hr>
                     <div class="alert alert-info">
                       <strong>IMPORTANTE!</strong>
-                      Al hacer click, se le redireccionará a una página de MercadoPago para proceder con el
-                      pago, si el pago es exitoso, regresará
-                      automaticamente a nuestra web. <br>
-                      <mark>Procure no cerrar la página hasta concluir con el pago! </mark>
+                      Es importante que envie el <mark> CODIGO DE SU ORDEN </mark> como comentario al momento de hacer
+                      el
+                      YAPEO. <br>
+                      El <mark>CODIGO DE SU ORDEN </mark> es: <mark>[[dbCheckout.orderUniqueIdentifier]]</mark>
                     </div>
 
+                    <p class="fs-4">Importe a Pagar:
+                      <b>[[calcularTotal()]] S/.</b>
 
+                      <img src="/images/QR.jpg" class="rounded mx-auto d-block" width="260">
+                      <a href="https://api.whatsapp.com/send?phone=51921276596" class="btn-lg btn-outline-dark"
+                        style="background-color: rgb(197, 233, 171);">Scanee el QR o mande el Yape al número:
+                        +51 921276596</a>
+                    </p>
+                    <hr>
+                    <p class="fs-5">
+                      Si ya hizo el pago siguiendo las instrucciones, haga click en "Confirmar Pago".
+                    </p>
 
-
-                    <input class="btn btn-primary" type="submit" value="Ir al Pago" />
+                    <input class="btn btn-primary" type="submit" value="Confirmar Pago" />
                   </form>
-                </div>
+                </div> <!-- End -->
 
-              </div> <!-- End -->
-              <div v-if="metodoPago==='yape'" class="tab-pane fade show active pt-3 text-center">
-
-                <p class="fs-5"><b> Inserte el nombre del usuario Yape: </b>
-                </p>
-
-                <form @submit="handlePayment">
-                  <div class="form-group">
-                    <label>Nombre(s):</label>
-                    <input type="text" class="form-control" v-model.trim="nombrePagador" required>
-
-                  </div>
-                  <div class="form-group">
-                    <label>Apellidos:</label>
-                    <input type="text" class="form-control" v-model.trim="apellidoPagador" required>
-
-                  </div>
-                  <hr>
-                  <div class="alert alert-info">
-                    <strong>IMPORTANTE!</strong>
-                    Es importante que envie el <mark> CODIGO DE SU ORDEN </mark> como comentario al momento de hacer el
-                    YAPEO. <br>
-                    El <mark>CODIGO DE SU ORDEN </mark> es: <mark>[[dbCheckout.orderUniqueIdentifier]]</mark>
-                  </div>
-
-                  <p class="fs-4">Importe a Pagar:
-                    <b>[[calcularTotal()]] S/.</b>
-
-                    <img src="/images/QR.jpg" class="rounded mx-auto d-block" width="260">
-                    <a href="https://api.whatsapp.com/send?phone=51921276596" class="btn-lg btn-outline-dark"
-                      style="background-color: rgb(197, 233, 171);">Scanee el QR o mande el Yape al número:
-                      +51 921276596</a>
-                  </p>
-                  <hr>
-                  <p class="fs-5">
-                    Si ya hizo el pago siguiendo las instrucciones, haga click en "Confirmar Pago".
-                  </p>
-
-                  <input class="btn btn-primary" type="submit" value="Confirmar Pago" />
-                </form>
-              </div> <!-- End -->
-
-              <!-- Se escondio el método plin debido a que no soporta mensajes, si se desea descomentar lo de abajo -->
-              <!-- <div v-if="metodoPago==='plin'" class="tab-pane fade show active pt-3 text-center">
+                <!-- Se escondio el método plin debido a que no soporta mensajes, si se desea descomentar lo de abajo -->
+                <!-- <div v-if="metodoPago==='plin'" class="tab-pane fade show active pt-3 text-center">
 
                 <p class="fs-5"> <b>Inserte el nombre del usuario Plin:</b></p>
 
@@ -337,21 +338,37 @@
                 </form>
 
               </div> -->
-              <!-- Paypal info -->
+                <!-- Paypal info -->
 
-              <!-- bank transfer info -->
+                <!-- bank transfer info -->
 
-              <!-- End -->
+                <!-- End -->
 
 
+              </div>
             </div>
+
+
           </div>
-
-
         </div>
       </div>
     </div>
+
+  </template>
+
+
+  <div v-else class="container">
+    <div class="row p-5">
+      <div class="mx-auto col-md-8 col-lg-4">
+        <div class="mx-auto block-heading">
+          <div class="font-georgia-bold">Espere mientras se procesa su compra</div>
+        </div>
+        <div class="mx-auto loader"></div>
+      </div>
+    </div>
   </div>
+
+
 
 
 </div>

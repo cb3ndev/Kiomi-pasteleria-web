@@ -156,7 +156,7 @@ class PaymentView(View):
             requestURL = request.GET.get('status', '')
             # get la fecha y convcertirla de num enteros a tipo fecha
             date_delivery = datetime.fromtimestamp(
-                int(request.GET.get('dateDelivery', ''))/1000.0).date()
+                int(request.GET.get('dateDelivery', 0))/1000.0).date()
             # NOTA: Esta fecha esta en UTC-5 (hora peru) en el server local, revisar si es asi tambien en el server de producción
             if order.metodoPago is not None:
                 # Se hara lo siguiente si el pedido esta pendiente de confirmación

@@ -21,6 +21,10 @@ new Vue({
     //console.log(this.getCookie("cart"));
     this.URLDetails();
     //this.updateStatusPayment();
+
+    /* setTimeout(function () {
+      checkoutVueInstance.$destroy();
+    }, 50); */
   },
   methods: {
     /* getCookieEmail(cName) {
