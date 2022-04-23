@@ -8,7 +8,7 @@ new Vue({
   data() {
     return {
       isLoading: false,
-      isActive: false,
+      isActive: false, //booleano que sirve para mostrar la parte donde se paga
       message: "hello",
       dbCheckout: {
         cartItems: 0,
@@ -47,58 +47,59 @@ new Vue({
       //A continuación se usara una variable booleana para cuando se presione el boton de PAGAR,
       //Se escondera lo relacionado a checkout para que el usario no pueda tocar nada si ya presiono este boton
       isPaymentAlreadyPressed: false,
-      distritosParaElegir: [
-        "Ancón",
-        "Ate",
-        "Barranco",
-        "Breña",
-        "Carabayllo",
-        "Cercado de Lima",
-        "Chaclacayo",
-        "Chorrillos",
-        "Cieneguilla",
-        "Comas",
-        "El agustino",
-        "Independencia",
-        "Jesús maría",
-        "La molina",
-        "La victoria",
-        "Lince",
-        "Los olivos",
-        "Lurigancho",
-        "Lurín",
-        "Magdalena del mar",
-        "Miraflores",
-        "Pachacámac",
-        "Pucusana",
-        "Pueblo libre",
-        "Puente piedra",
-        "Punta hermosa",
-        "Punta negra",
-        "Rímac",
-        "San bartolo",
-        "San borja",
-        "San isidro",
-        "San Juan de Lurigancho",
-        "San Juan de Miraflores",
-        "San Luis",
-        "San Martin de Porres",
-        "San Miguel",
-        "Santa Anita",
-        "Santa María del Mar",
-        "Santa Rosa",
-        "Santiago de Surco",
-        "Surquillo",
-        "Villa el Salvador",
-        "Villa Maria del Trinufo",
-      ],
     };
   },
   //component cdn vuejs-datepicker
   components: {
     vuejsDatepicker,
   },
-
+  //Notar que esta variable se encuentra fuera, denotando que es una variable estatica (read only)
+  //se le llama asi en html: $options.distritosParaElegir y en vue: this.$options.distritosParaElegir
+  distritosParaElegir: [
+    "Ancón",
+    "Ate",
+    "Barranco",
+    "Breña",
+    "Carabayllo",
+    "Cercado de Lima",
+    "Chaclacayo",
+    "Chorrillos",
+    "Cieneguilla",
+    "Comas",
+    "El agustino",
+    "Independencia",
+    "Jesús maría",
+    "La molina",
+    "La victoria",
+    "Lince",
+    "Los olivos",
+    "Lurigancho",
+    "Lurín",
+    "Magdalena del mar",
+    "Miraflores",
+    "Pachacámac",
+    "Pucusana",
+    "Pueblo libre",
+    "Puente piedra",
+    "Punta hermosa",
+    "Punta negra",
+    "Rímac",
+    "San bartolo",
+    "San borja",
+    "San isidro",
+    "San Juan de Lurigancho",
+    "San Juan de Miraflores",
+    "San Luis",
+    "San Martin de Porres",
+    "San Miguel",
+    "Santa Anita",
+    "Santa María del Mar",
+    "Santa Rosa",
+    "Santiago de Surco",
+    "Surquillo",
+    "Villa el Salvador",
+    "Villa Maria del Triunfo",
+  ],
   created() {
     if (user !== "AnonymousUser") {
       this.getOrderItems();
@@ -218,10 +219,10 @@ new Vue({
       }
 
       this.isInvalid.nombrePersonaEnvio = !(
-        this.nombrePersonaEnvio.trim().length > 3
+        this.nombrePersonaEnvio.trim().length > 1
       );
-      this.isInvalid.address = !(this.address.trim().length > 3);
-      this.isInvalid.distrito = !(this.distrito.trim().length > 3);
+      this.isInvalid.address = !(this.address.trim().length > 1);
+      this.isInvalid.distrito = !(this.distrito.trim().length > 1);
       // const regExpFullName    =  /^[a-zA-ZáéíóúÁÉÍÓÚ]{2,15}(?: [a-zA-ZáéíóúÁÉÍÓÚ]+)?(?: [a-zA-ZáéíóúÁÉÍÓÚ]+)?(?: [a-zA-ZáéíóúÁÉÍÓÚ]+)?$/
       // this.isInvalid.nombrePersonaEnvioRegEx = regExpFullName.test( this.nombrePersonaEnvio )
       const regExpPhoneNumber = /[+0123456789]{6,12}/;
@@ -290,7 +291,9 @@ new Vue({
           console.log("yep err: ", err);
           this.isLoading = false;
         }
-
+        if (this.isActive) {
+          alert("Se actualizó la información del envío!");
+        }
         this.isActive = true;
       } else {
         this.isActive = false;

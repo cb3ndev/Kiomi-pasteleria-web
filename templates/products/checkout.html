@@ -129,7 +129,8 @@
                         <option style="font-weight: bold; font-size: 17.5px;" value="" disabled selected>
                           Seleccione su distrito...</option>
                         <option style="font-weight: bold; font-size: 17.5px; color: black;"
-                          v-for="distritoElegir in distritosParaElegir" :key="distritoElegir" :value="distritoElegir">
+                          v-for="distritoElegir in $options.distritosParaElegir" :key="distritoElegir"
+                          :value="distritoElegir">
                           [[distritoElegir]]</option>
                       </select>
                       <!--  -->
@@ -168,8 +169,14 @@
                   </div>
                   <hr />
 
-                  <a href="#metodos-pago" type="button" class="btn btn-primary btn-lg btn-block"
+                  <a v-if="!isActive" href="#metodos-pago" type="button" class="btn btn-primary btn-lg btn-block"
                     @click="handleContinue">Continuar al Pago</a>
+                  <template v-else>
+                    <label class="font-times-roman">Para actualizar información del envío, edite y
+                      presione el sgte. boton:</label>
+                    <a href="#metodos-pago" type="button" class="btn btn-primary btn-lg btn-block"
+                      @click="handleContinue">Actualizar</a></template>
+
                 </form>
               </div>
             </div>
