@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
+    # cloudinary para imagenes
     'cloudinary',
 ]
 
@@ -151,8 +152,8 @@ LOGIN_URL = "/"
 # Esto corrige un problema del browser que no permite el tipo MIME ("text/plain"):
 # Referencia: https://stackoverflow.com/questions/64013643/failed-to-load-module-script-the-server-responded-with-a-non-javascript-mime-ty
 if DEBUG:
-  import mimetypes
-  mimetypes.add_type("application/javascript", ".js", True)
+    import mimetypes
+    mimetypes.add_type("application/javascript", ".js", True)
 
 # django allauth
 AUTHENTICATION_BACKENDS = [
