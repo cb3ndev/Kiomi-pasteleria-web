@@ -108,7 +108,8 @@
                     </div>
                     <!-- El correo solo apracera en pantalla si no se esta loggeado -->
                     <div v-if="email!==null" class="form-group">
-                      <label class="font-times-roman">Correo Electrónico:</label>
+                      <label class="font-times-roman">Correo Electrónico (se le enviará el resumen de la compra
+                        aquí):</label>
                       <input class="form-control" :class="{'is-invalid': isInvalid.email}" type="email" v-model="email"
                         placeholder="Escriba su correo electrónico.." required />
                       <small class="invalid-feedback">
@@ -119,8 +120,19 @@
 
                     <div class="form-group ">
                       <label class="font-times-roman">Distrito:</label>
-                      <input required class="form-control" :class="{'is-invalid': isInvalid.distrito}" type="text"
-                        v-model="distrito" placeholder="Escriba su distrito aqui..." />
+                      <!-- <input required class="form-control" :class="{'is-invalid': isInvalid.distrito}" type="text"
+                        v-model="distrito" placeholder="Escriba su distrito aqui..." /> -->
+                      <!--  -->
+                      <select style="font-weight: 500; font-size: 18px;"
+                        :style="distrito==='' ? { 'color': 'gray' } : { 'color': 'black' }" class="form-select"
+                        :class="{'is-invalid': isInvalid.distrito}" v-model="distrito">
+                        <option style="font-weight: bold; font-size: 17.5px;" value="" disabled selected>
+                          Seleccione su distrito...</option>
+                        <option style="font-weight: bold; font-size: 17.5px; color: black;"
+                          v-for="distritoElegir in distritosParaElegir" :key="distritoElegir" :value="distritoElegir">
+                          [[distritoElegir]]</option>
+                      </select>
+                      <!--  -->
                       <small class="invalid-feedback">
                         LLene de forma correcta este campo.
                       </small>
@@ -361,7 +373,8 @@
     <div class="row p-5">
       <div class="mx-auto col-md-8 col-lg-4">
         <div class="mx-auto block-heading">
-          <div class="font-georgia-bold">Espere mientras se procesa su compra</div>
+          <div style="text-align: center;" class="font-georgia-bold">Espere un momento mientras se procesa su compra
+          </div>
         </div>
         <div class="mx-auto loader"></div>
       </div>
