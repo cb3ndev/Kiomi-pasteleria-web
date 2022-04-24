@@ -147,8 +147,7 @@ MEDIA_URL = '/images/'
 # url for images
 MEDIA_ROOT = os.path.join(BASE_DIR, 'static/images')
 
-LOGIN_REDIRECT_URL = "/"
-LOGIN_URL = "/"
+
 # Esto corrige un problema del browser que no permite el tipo MIME ("text/plain"):
 # Referencia: https://stackoverflow.com/questions/64013643/failed-to-load-module-script-the-server-responded-with-a-non-javascript-mime-ty
 if DEBUG:
@@ -162,12 +161,36 @@ AUTHENTICATION_BACKENDS = [
     # `allauth` specific authentication methods, such as login by e-mail
     'allauth.account.auth_backends.AuthenticationBackend',
 ]
-SITE_ID = 1
+SITE_ID = 1  # esta valor es importante para que funcione el login, normalmente al inicar el proyecto en admin => sites aparace
+# un site llamado example.com, debemos editar este valor con el del sitio que autorizaremos (por ej. 127.0.0.1 para trabajar en local)
+# De no haber podido editarlo por alguna razom este site_id debe ser cambiado para que matche con el id de ese nuevo sitio añadido en sites
+LOGIN_REDIRECT_URL = "/"
+LOGIN_URL = "/"
+# ACCOUNT_AUTHENTICATION_METHOD = 'email'
+# ACCOUNT_EMAIL_REQUIRED = True
+# ACCOUNT_EMAIL_VERIFICATION = 'none'
+# ACCOUNT_LOGOUT_ON_GET = True
 
-ACCOUNT_AUTHENTICATION_METHOD = 'email'
+# Inicio: Añadido Cristian
+SOCIALACCOUNT_QUERY_EMAIL = True
+ACCOUNT_LOGOUT_ON_GET = True
+ACCOUNT_UNIQUE_EMAIL = True
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_EMAIL_VERIFICATION = 'none'
-ACCOUNT_LOGOUT_ON_GET = True
+ACCOUNT_AUTHENTICATION_METHOD = 'email'
+
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        'SCOPE': [
+            'profile',
+            'email',
+        ],
+        'AUTH_PARAMS': {
+            'access_type': 'online',
+        }
+    }
+}
+# Fin: Añadido Cristian
 
 cloudinary.config(
     cloud_name=os.getenv("CLOUDINARY_CLOUD_NAME"),
