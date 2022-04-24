@@ -54,6 +54,8 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.google',
     # cloudinary para imagenes
     'cloudinary',
+    # deployment heroku:
+    'whitenoise.runserver_nostatic',
 ]
 
 MIDDLEWARE = [
@@ -64,6 +66,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    # deployment heroku:
+    'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
 ROOT_URLCONF = 'kiomi_app.urls'
