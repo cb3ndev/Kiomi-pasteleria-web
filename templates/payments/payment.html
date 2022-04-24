@@ -10,33 +10,27 @@
           {% if user.is_authenticated %}
           <b> Su pago se ha aprobado. <br>
                Revise el resumen de su pedido en su correo: {{request.user.email}} </b> <br>
-          <a href="/car" type="button" class="btn btn-primary btn-lg btn-block"> <b> Regresar al carro </b></a>
           {% else %}
           <b> Su pago se ha aprobado. <br>
                Revise el resumen de su pedido en su correo: {{email}} </b> <br>
-          <a href="/car" type="button" class="btn btn-primary btn-lg btn-block"> <b> Regresar al carro </b></a>
           {% endif %}
      </div>
-
      <div v-if="status=='pending'" class="alert alert-warning" role="alert">
           {% if user.is_authenticated %}
           <b> Su pago esta pendiente de confirmación, el vendedor se comunicara con usted al confirmar el pago.
                <br>
                Revise el resumen de su pedido en su correo: {{request.user.email}} </b> <br>
-          <a href="/car" type="button" class="btn btn-primary btn-lg btn-block"> <b> Regresar al carro </b></a>
           {% else %}
           <b> Su pago esta pendiente de confirmación, el vendedor se comunicara con usted al confirmar el
                pago.
                <br>
                Revise el resumen de su pedido en su correo: {{email}} </b> <br>
-          <a href="/car" type="button" class="btn btn-primary btn-lg btn-block"> <b> Regresar al carro </b></a>
           {% endif %}
      </div>
-
      <div v-if="status=='rejected'" class="alert alert-danger" role="alert">
           <b> Su pago fue rechazado. </b> <br>
-          <a href="/car" type="button" class="btn btn-primary btn-lg btn-block"> <b> Regresar al carro </b></a>
      </div>
+     <div> <a href="/" type="button" class="btn btn-primary btn-lg btn-block"> <b> Regresar al inicio </b></a> </div>
 </div>
 {% endblock body %}
 {% block js %}
