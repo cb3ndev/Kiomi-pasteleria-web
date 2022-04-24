@@ -1,0 +1,1 @@
+web: gunicorn kiomi_app.wsgi --log-file -

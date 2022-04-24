@@ -171,7 +171,10 @@ LOGIN_URL = "/"
 # ACCOUNT_EMAIL_VERIFICATION = 'none'
 # ACCOUNT_LOGOUT_ON_GET = True
 
-# Inicio: Añadido Cristian
+# Inicio: Añadido Cristian (Login)
+# Referencias:
+# https://dev.to/mdrhmn/django-google-authentication-using-django-allauth-18f8
+# https://www.section.io/engineering-education/django-google-oauth/
 SOCIALACCOUNT_QUERY_EMAIL = True
 ACCOUNT_LOGOUT_ON_GET = True
 ACCOUNT_UNIQUE_EMAIL = True
