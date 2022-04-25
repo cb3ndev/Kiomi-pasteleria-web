@@ -176,10 +176,25 @@
 .card-product {
   margin-bottom: 24px;
 }
-.page-item {
-  z-index: 999;
-  cursor: pointer;
+/* inicio */
+
+.page-item.active .page-link {
+  z-index: 3;
+  color: rgb(0, 0, 0);
+  background-color: #feb7be;
+  border-color: #feb7be;
 }
+
+.page-link {
+  position: relative;
+  display: block;
+  color: #000000;
+  text-decoration: none;
+  background-color: #fff;
+  border: 1px solid #dee2e6;
+  transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+}
+/* fin */
 
 /*Product-detail*/
 body {

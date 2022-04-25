@@ -37,7 +37,7 @@ new Vue({
       totalQuantityCarItems: 0, //añadido para que se pueda asignar su valor dentro del "then" de su función
       //valores por defecto solo para galletas, tener en cuenta que estos valores son estaticos, deben ser cambiados cada vez que
       //se aumenten o se disminuyan sabores a las galletas.
-      cantidadPorDefectoGalletas: [6, 12, 6, 12], //debe tener la misma cantidad de valores que la cantidad de sabores
+      cantidadPorDefectoGalletas: [6, 6, 6, 6, 12], //debe tener la misma cantidad de valores que la cantidad de sabores
       //OJO: NO PONER 0 COMO VALOR POR DEFECTO
     };
   },
