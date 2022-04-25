@@ -341,9 +341,9 @@ class ProcessOrderViewSet(viewsets.ViewSet):
                     #    },
                     # },
                     "back_urls": {
-                        "success": "https://kiomi-test-v1.herokuapp.com/payment/?dateDelivery="+str(dateDelivery)+"&identificador="+identificador,
-                        "failure": "https://kiomi-test-v1.herokuapp.com/payment/",
-                        "pending": "https://kiomi-test-v1.herokuapp.com/payment/?dateDelivery="+str(dateDelivery)+"&identificador="+identificador
+                        "success": "https://kiomi-pasteleria.herokuapp.com/payment/?dateDelivery="+str(dateDelivery)+"&identificador="+identificador,
+                        "failure": "https://kiomi-pasteleria.herokuapp.com/payment/",
+                        "pending": "https://kiomi-pasteleria.herokuapp.com/payment/?dateDelivery="+str(dateDelivery)+"&identificador="+identificador
                         # solo envia la fecha si la compra es exitosa (o pendiente)
                         # "success": "http://127.0.0.1:8000/payment/?dateDelivery="+str(dateDelivery)+"&identificador="+identificador,
                         # "failure": "http://127.0.0.1:8000/payment/",
