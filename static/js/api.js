@@ -1,5 +1,5 @@
-const url = "http://127.0.0.1:8000/api";
-//const url = "https://kiomi-test-v1.herokuapp.com/api";
+//const url = "http://127.0.0.1:8000/api";
+const url = "https://kiomi-test-v1.herokuapp.com/api";
 
 const getProducts = (currentPage) => {
   const endpoint = `${url}/products/?page=${currentPage}`;
