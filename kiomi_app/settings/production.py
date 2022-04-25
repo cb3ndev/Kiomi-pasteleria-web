@@ -1,10 +1,10 @@
 from .base import *
-
+import dj_database_url
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['kiomi-test-v1.herokuapp.com']
+ALLOWED_HOSTS = ['kiomi-pasteleria.herokuapp.com']
 
 # host allowed
 CORS_ALLOWED_ORIGINS = [
@@ -16,18 +16,20 @@ CORS_ALLOWED_ORIGINS = [
 
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
+# Correr "heroku pg:info" en el CLI para saber mas información de la base de datos en heroku
 
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'd9198mrdp4nqu3',
-				'USER': 'knodbuhkvablcf',
-				'PASSWORD': 'f7bd54050a9b1a5701ffc32db4362e0c8099096e4c85e4c07b812e8bd7833e69',
-				'HOST': 'ec2-3-222-235-188.compute-1.amazonaws.com',
-				'PORT': 5432,
+        'NAME': 'd42nnt50q34e59',
+        'USER': 'ctxvpaouspjhbx',
+        'PASSWORD': 'f9741190af4c0fe52161b39363aa63d57b94b635112c879394fa9e12db5b82ed',
+        'HOST': 'ec2-3-218-171-44.compute-1.amazonaws.com',
+        'PORT': 5432,
     }
 }
+db_from_env = dj_database_url.config(conn_max_age=600)
+DATABASES['default'].update(db_from_env)
 
 STATICFILES_DIRS = (BASE_DIR, 'static')
-STATIC_ROOT = os.path.join(BASE_DIR, 'static_cdn')
-
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
