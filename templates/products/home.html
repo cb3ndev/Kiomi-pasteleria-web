@@ -1,38 +1,20 @@
-{% extends 'index.html' %} 
-{% load static %} 
-{% block title %} Inicio {% endblock title %} 
+{% extends 'index.html' %}
+{% load static %}
+{% block title %} Inicio {% endblock title %}
 {% block body %}
 <!-- Start Banner Hero -->
-<div
-  id="template-mo-zay-hero-carousel"
-  class="carousel slide"
-  data-bs-ride="carousel"
->
+<div id="template-mo-zay-hero-carousel" class="carousel slide" data-bs-ride="carousel">
   <ol class="carousel-indicators">
-    <li
-      data-bs-target="#template-mo-zay-hero-carousel"
-      data-bs-slide-to="0"
-      class="active"
-    ></li>
-    <li
-      data-bs-target="#template-mo-zay-hero-carousel"
-      data-bs-slide-to="1"
-    ></li>
-    <li
-      data-bs-target="#template-mo-zay-hero-carousel"
-      data-bs-slide-to="2"
-    ></li>
+    <li data-bs-target="#template-mo-zay-hero-carousel" data-bs-slide-to="0" class="active"></li>
+    <li data-bs-target="#template-mo-zay-hero-carousel" data-bs-slide-to="1"></li>
+    <li data-bs-target="#template-mo-zay-hero-carousel" data-bs-slide-to="2"></li>
   </ol>
   <div class="carousel-inner">
     <div class="carousel-item active">
       <div class="container">
         <div class="row p-5">
           <div class="mx-auto col-md-8 col-lg-6 order-lg-last">
-            <img
-              class="img-fluid"
-              src="./images/1_inicio.jpg"
-              alt=""
-            />
+            <img class="img-fluid" src="./images/1_inicio.jpg" alt="" />
           </div>
         </div>
       </div>
@@ -41,11 +23,7 @@
       <div class="container">
         <div class="row p-5">
           <div class="mx-auto col-md-8 col-lg-6 order-lg-last">
-            <img
-              class="img-fluid"
-              src="./images/2_queque_promo.jpg"
-              alt=""
-            />
+            <img class="img-fluid" src="./images/2_queque_promo.jpg" alt="" />
           </div>
         </div>
       </div>
@@ -54,30 +32,18 @@
       <div class="container">
         <div class="row p-5">
           <div class="mx-auto col-md-8 col-lg-6 order-lg-last">
-            <img
-              class="img-fluid"
-              src="./images/3_delivery.jpg"
-              alt=""
-            />
+            <img class="img-fluid" src="./images/3_delivery.jpg" alt="" />
           </div>
         </div>
       </div>
     </div>
   </div>
-  <a
-    class="carousel-control-prev text-decoration-none w-auto ps-3"
-    href="#template-mo-zay-hero-carousel"
-    role="button"
-    data-bs-slide="prev"
-  >
+  <a class="carousel-control-prev text-decoration-none w-auto ps-3" href="#template-mo-zay-hero-carousel" role="button"
+    data-bs-slide="prev">
     <i class="fas fa-chevron-left"></i>
   </a>
-  <a
-    class="carousel-control-next text-decoration-none w-auto pe-3"
-    href="#template-mo-zay-hero-carousel"
-    role="button"
-    data-bs-slide="next"
-  >
+  <a class="carousel-control-next text-decoration-none w-auto pe-3" href="#template-mo-zay-hero-carousel" role="button"
+    data-bs-slide="next">
     <i class="fas fa-chevron-right"></i>
   </a>
 </div>
@@ -89,34 +55,33 @@
       <h1 class="h1 font-stem-bold">Nuestros Productos</h1>
     </div>
   </div>
-	<div class="block-heading">
-	</div>
-	<div class="container">
-		<template>
-			<div class="row d-flex justify-content-center">
-				<store-card-product v-for="product in dbProducts" :key="product.id" :product="product" />
-			</div>
-		</template>
+  <div class="block-heading">
+  </div>
+  <div class="container">
+    <template>
+      <div class="row d-flex justify-content-center">
+        <store-card-product v-for="product in dbProducts" :key="product.id" :product="product" />
+      </div>
+    </template>
+    <nav aria-label="Page navigation">
+      <ul class="pagination justify-content-center">
+        <li class="page-item" v-bind:class="[currentPage===1 ? 'disabled' :'']">
+          <a class="page-link link-dark font-stem-bold" tabindex="-1" aria-disabled="true" @click="loadPrev()">Atras</a>
+        </li>
+        <li class="page-item" v-for="page in arrPages" v-bind:class="[currentPage===page ? 'active' :'']">
+          <a class="page-link" @click="loadCurrentPage(page)">[[page]]</a>
+        </li>
+        <li class="page-item" v-bind:class="[totalPages===currentPage ? 'disabled' :'']">
+          <a class="page-link link-dark font-stem-bold" @click="loadNext()">Siguiente</a>
+        </li>
+      </ul>
+    </nav>
 
-		<nav aria-label="Page navigation">
-			<ul class="pagination justify-content-center">
-				<li class="page-item" v-bind:class="[currentPage===1 ? 'disabled' :'']">
-					<a class="page-link link-dark font-stem-bold" tabindex="-1" aria-disabled="true" @click="loadPrev()">Atras</a>
-				</li>
-				<li class="page-item" v-for="page in arrPages" v-bind:class="[currentPage===page ? 'active' :'']">
-					<a class="page-link btn-success" @click="loadCurrentPage(page)">[[page]]</a>
-				</li>
-				<li class="page-item" v-bind:class="[totalPages===currentPage ? 'disabled' :'']">
-					<a class="page-link link-dark font-stem-bold" @click="loadNext()">Siguiente</a>
-				</li>
-			</ul>
-		</nav>
-
-	</div>
+  </div>
 </div>
 <!-- End Categories of The Month -->
-{% endblock body %} 
-{% block js %} 
+{% endblock body %}
+{% block js %}
 <!-- components -->
 <script src="{% static 'js/components/CardPagination.js' %}"></script>
 <script src="{% static 'js/components/StoreCardProduct.js' %}"></script>
